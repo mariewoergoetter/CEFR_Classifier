@@ -13,6 +13,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.svm import SVC
 import xgboost as xgb
 
