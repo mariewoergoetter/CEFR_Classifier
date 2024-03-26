@@ -3,7 +3,7 @@ from text_feature_transformer import TextFeatureTransformer
 from joblib import load
 
 # Load your trained model
-model_path = '/Users/mlwfee/Desktop/CEFR_Classifier/xgboost_model.joblib'
+model_path = 'xgboost_model.joblib'
 model = load(model_path)
 
 # Define the mapping from numeric predictions back to CEFR levels
