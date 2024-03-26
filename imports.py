@@ -1,5 +1,3 @@
-# imports.py
-
 import numpy as np
 import pandas as pd
 import re
@@ -18,9 +16,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
 import xgboost as xgb
 
-# Load spaCy English model
 nlp = spacy.load("en_core_web_sm")
 
-# Print a confirmation message
 print("All necessary packages have been imported.")
 
