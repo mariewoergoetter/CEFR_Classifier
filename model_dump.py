@@ -1,7 +1,6 @@
 from joblib import dump
 
-model_filename = 'xgboost_model.joblib'
+filename = f'{best_model_name.replace(" ", "_").lower()}_best_model.joblib'
+dump(best_model, filename)
+print(f'Model saved: {filename}')
 
-dump(pipeline, model_filename)
-
-print(f"Model saved to {model_filename}")
