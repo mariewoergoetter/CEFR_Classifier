@@ -1,26 +1,37 @@
-# Load the Spacy model
+import spacy
+import textstat
+import numpy as np
+import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+import xgboost as xgb
+import re
+
 nlp = spacy.load("en_core_web_sm")
 
 class TextFeatureTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
-        # Fit method is used when the model requires fitting to the data,
-        # but this transformer doesn't, so we just return self
         return self
-
+        
+    #Transform the text data to features
     def transform(self, X, y=None):
-        # Transform the text data to features
         features = np.array([self.preprocess_text(text) for text in X])
         return features
 
+    #Simplify the text to help with readability scores
     @staticmethod
     def preprocess_text(text):
-        # Simplify the text to help with the readability scores
         text = TextFeatureTransformer._simplify_punctuation(text)
 
-        # Initialize spaCy document for linguistic features
         doc = nlp(text)
 
-        # Compute readability scores and other features
         features = [
             textstat.flesch_reading_ease(text),
             textstat.smog_index(text),
@@ -35,7 +46,6 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
             TextFeatureTransformer.get_mean_ents_per_sentence(doc)
         ]
 
-        # Return features as a numpy array
         return np.array(features)
 
     @staticmethod
