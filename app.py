@@ -3,7 +3,7 @@ from text_feature_transformer import TextFeatureTransformer
 from joblib import load
 
 # Load the model with the best performance, in this case xgboost
-model_path = 'xgboost_model.joblib'
+model_path = 'best_model_xgboost.joblib'
 model = load(model_path)
 
 # Define the mapping from numeric, used in training, back to CEFR levels
