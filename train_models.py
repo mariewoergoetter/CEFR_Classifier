@@ -1,3 +1,19 @@
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import LabelEncoder
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+import numpy as np
+import re
+import spacy
+import textstat
+import xgboost as xgb
+
 nlp = spacy.load("en_core_web_sm")
 
 class TextFeatureTransformer(BaseEstimator, TransformerMixin):
@@ -10,12 +26,10 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, y=None):
-        # Transform the text data to features
         features = np.array([self.preprocess_text(text) for text in X])
         return features
 
     def preprocess_text(self, text):
-        # Simplify the text to help with the readability scores
         text = self._simplify_punctuation(text)
 
         # Initialize spaCy document for linguistic features
@@ -66,7 +80,6 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
         num_ents = len(doc.ents)
         return num_ents / num_sents
 
-# Define the pipeline
 pipeline = Pipeline([
     ('features', FeatureUnion([
         ('tfidf', TfidfVectorizer(ngram_range=(1, 3))),
@@ -76,15 +89,12 @@ pipeline = Pipeline([
     ('classifier', RandomForestClassifier())  # Placeholder classifier
 ])
 
-# Example: Splitting the dataset
 X_train, X_test, y_train, y_test = train_test_split(df['Text'], df['CEFR_Level'], test_size=0.2, random_state=42)
 
-# Example: Training with a placeholder classifier
 pipeline.fit(X_train, y_train)
 y_pred = pipeline.predict(X_test)
 print(classification_report(y_test, y_pred))
 
-# Define classifiers
 classifiers = {
     'Random Forest': RandomForestClassifier(n_estimators=100),
     'Logistic Regression': LogisticRegression(max_iter=1000),
@@ -92,17 +102,14 @@ classifiers = {
     'XGBoost': xgb.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss')
 }
 
-# Train and evaluate each classifier
 for name, classifier in classifiers.items():
     pipeline.set_params(classifier=classifier)
     print(f"Training {name}...")
     
-    # Fit label encoder on the target variable
     label_encoder = LabelEncoder()
     y_train_encoded = label_encoder.fit_transform(y_train)
     y_test_encoded = label_encoder.transform(y_test)
 
-    # Fit pipeline
     pipeline.fit(X_train, y_train_encoded)
 
     y_pred = pipeline.predict(X_test)
