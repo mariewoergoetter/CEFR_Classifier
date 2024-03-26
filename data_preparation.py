@@ -1,6 +1,10 @@
+import os
+from lxml import etree
+import pandas as pd
+
+#function to map the levels to CEFR levels 
 def cefr_level_mapper(level):
-    """Map numeric levels to CEFR levels."""
-    level = int(level)  # Ensure level is an integer
+    level = int(level)  
     if 1 <= level <= 3:
         return "A1"
     elif 4 <= level <= 6:
@@ -18,7 +22,7 @@ def cefr_level_mapper(level):
 
 data = []
 
-xml_file_path = '/Users/mlwfee/Desktop/CEFR_Classifier/data/EFCAMDAT_Database.xml'
+xml_file_path = '/filepath/EFCAMDAT_Database.xml'
 
 tree = etree.parse(xml_file_path, parser=etree.XMLParser(recover=True))
 root = tree.getroot()
@@ -26,9 +30,9 @@ root = tree.getroot()
 for writing in root.findall('.//writing'):
     level = writing.get('level')
     text = writing.find('text').text
-    if text:  # Ensure text is not None
-        text = text.strip()  # Remove any leading/trailing whitespace
-        mapped_level = cefr_level_mapper(level)  # Map numeric level to CEFR level
+    if text:  
+        text = text.strip()
+        mapped_level = cefr_level_mapper(level) 
         data.append({'CEFR_Level': mapped_level, 'Text': text})
 
 df = pd.DataFrame(data)
@@ -36,14 +40,15 @@ df = pd.DataFrame(data)
 if df.empty:
     print("DataFrame is empty.")
 else:
-    csv_file_path = '/Users/mlwfee/Desktop/CEFR_Classifier/data/efcamdat_data.csv'
+    csv_file_path = '/filepath/efcamdat_data.csv'
   
     df.to_csv(csv_file_path, index=False)
     print(f"Data extraction and saving completed. CSV file created at {csv_file_path}")
 
-
+#Create subset 
 subset_df = df.sample(frac=0.025, random_state=42)
 
-subset_df.to_csv('/Users/mlwfee/Desktop/CEFR_Classifier/data//ds_set.csv', index=False)
+#save downsized set
+subset_df.to_csv('/filepath/ds_set.csv', index=False)
 
 
