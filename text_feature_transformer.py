@@ -1,18 +1,4 @@
-import spacy
-import textstat
-import numpy as np
-import pandas as pd
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-import xgboost as xgb
-import re
+
 
 # Load the Spacy model
 nlp = spacy.load("en_core_web_sm")
